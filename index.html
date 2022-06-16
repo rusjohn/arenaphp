@@ -1,32 +1,186 @@
-<!DOCTYPE html>
-<html lang="en">
+<html>
+
+<title>Arena Radio — радио с электронной музыкой</title>
+<meta name="description" content="Интернет-радио с электронной музыкой. Драм-н-бейс, хаус, техно, транс, халфстеп. Прямые трансляции DJ-сетов">
+
+
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="yandex-verification" content="517174b7029baede" />
+
+<link rel="apple-touch-icon" href="/apple-icon.png">
+
+
+<meta name="viewport" content="initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=yes" />
+
+<link rel="shortcut icon" href="/favicon.ico" />
+<meta property="og:type" content="website" />
+
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Vercel + PHP</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/1.1.4/tailwind.min.css" />
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+<script>
+    function nowplay()
+    {
+        $.ajax({
+            url: "/radiostat.php",  //Тут указываем файл со скриптами
+            cache: false,
+            success: function(html){
+                $("#radiostat").html(html); //Контейнер для вывода информации
+            }
+        });
+    }
+
+    $(document).ready(function(){
+        nowplay();
+        setInterval('nowplay()',5000);  //Время в милесекундах, 30000=30сек
+    });
+</script>
 </head>
 
-<body class="font-mono bg-gray-300 w-screen h-screen flex items-center justify-center">
-    <div>
-        <div class="text-5xl font-bold">
-            Vercel + PHP
-            <a class="inline-block" href="https://vercel.com/new/project?template=https://github.com/juicyfx/vercel-examples/tree/master/php">
-                <img src="https://vercel.com/button" alt="Deploy to Vercel" />
-            </a>
-        </div>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;800&display=swap');
 
-        <p class="text-xl my-10">Use the <strong>deploy</strong> button or follow these steps.</p>
+  @keyframes show {
+from {opacity: 0;} 80% {opacity: 0;} to {opacity: 1;}
+}
 
-        <ol class="list-decimal my-4 mx-8 text-normal">
-            <li class="py-2">Clone repository <code class="bg-pink-600 rounded rounded-sm text-white p-2">git clone git@github.com:juicyfx/vercel-examples.git</code></li>
-            <li class="py-2">Switch to <code>/php</code> folder and run <code class="underline font-bold">vercel</code></li>
-            <li class="py-2">Open generated <strong>*.vercel.app</strong> domain [<a class="text-pink-800" href="https://php.vercel.app">demo</a>]</li>
-            <li class="py-2">Discover <strong>*.vercel.app/api/</strong> PHP functions [<a class="text-pink-800" href="https://php.vercel.app/api/">demo</a>] </li>
-        </ol>
-    </div>
+@media screen and (max-width: 799px) {
+  body {margin: 0; background: #06080F url(https://media.giphy.com/media/cJQMgFhZ705R5WdodN/giphy.gif) no-repeat; background-size: 130%; font-weight: 400; font-size: 14pt; line-height: 18px;}
+  #radiostat {width: 100%; text-align: center; font-family: Raleway; font-weight: 600; font-size: 10pt; line-height: 20pt;}
+  #ads {display: none;}
+}
+
+ @media screen and (min-width: 800px) {
+   body {margin: 0; background: #FFF url(https://media.giphy.com/media/VLPb4R2OKk6YNymM62/giphy-downsized-large.gif) no-repeat 20%; background-size: 100%; font-weight: 400; font-size: 16pt; line-height: 21px;}
+  }
+
+  #head {position: fixed; width: 100%; margin: 0 auto; background: rgb(0,0,0); background: linear-gradient(0deg, rgba(0,0,0,0) 16%, rgba(0,0,0,0.1) 100%); height: 200px; text-align: center; }
+  #ads {width: 98%; margin: 0 auto; text-align: right; position: fixed;}
+  .logo {padding-top: 30px}
+  #first {height: 15vh; }
+  .cntrl {cursor: pointer; animation: show 1.2s; margin: 0 auto; width: 56px; height: 56px; backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); background: rgba(0, 0, 0, 0.6); padding: 30px; border-radius: 100px;}
+  #start {height: 45vh;}
+  #radiostat {width: 100%; text-align: center; font-family: Raleway; font-weight: 600; font-size: 24pt; }
+  .play img {width: 48px; margin-left: 10px;} .pause img {width: 48px; margin-left: 4px;}
+  #name {position: absolute; padding: 20px; position:absolute; bottom:0; -webkit-user-select: all; /* для Safari */; user-select: all; z-index: 9999}
+
+  #content {width: 90%; max-width: 1400px; background: #202020; color: #EAEAEA; font-family: Manrope; font-size: 14pt; letter-spacing: 0.03em; margin: 0 auto; border-radius: 34px; padding: 40px; overflow: hidden; }
+}
+</style>
+
+
+<body>
+  <div id="head"><img class="logo" src="https://arenaradio.ru/logo.svg"></div>
+ <div id="ads"><a href="https://t.me/radioarena" target="_blank" ><img class="logo" src="https://arenaradio.ru/ads.svg"></a></div>
+
+
+                            <div id="stream_song"></div>
+                            <div id="stream_listenters"></div>
+
+
+ <div id="start"></div><div id="radiostat" class="display-8 artist">Загрузка...</div>
+
+
+ <div id="fixedplay">
+
+   <div id="radioheart-player"
+       class="simple-white"
+       data-stream="https://listen.myrh.ru/id060679"
+       data-autostart="false"
+       data-volume="0.5"
+       data-playtext="Нажмите play для начала воспроизведения"
+ >
+   <div class="play-pause-container">
+       <div class="play" id="radioheart-player-play"></div>
+       <div class="pause hidden" id="radioheart-player-pause"></div>
+       <div class="volume" id="radioheart-player-volume"></div>
+   </div>
+ </div>
+ </div>
+
+
+ <script src="https://player.radioheart.ru/js/app.js"></script>
+ <link type="text/css" rel="stylesheet" href="https://player.radioheart.ru/css/app.css">
+
+ <style>
+ #fixedplay {position: fixed; bottom: 30px; width: 250px; height: 40px; padding-top: 13px; padding-left: 14px; background: #f5f5f5; border-radius: 100px; left: 50%; margin-left:-125px; }
+ #radioheart-player {width: 250px;}
+ .play {float: left; width: 40%; margin-top: -11px; margin-left: -12px; }
+ .pause {float: left; width: 40%; margin-top: -11px; margin-left: -12px; }
+ .volume {float: left; width: 80%;}
+
+ .simple-white .play-pause-container {
+   height: 24px;
+   width: 116px;
+   background: none;
+   padding: 5px;
+   border-radius: 5px;
+   clear: both;
+ }
+
+ .simple-white .play-pause-container .play {
+     background-image: url(/arena/play.svg);
+ }
+
+ .simple-white .play-pause-container .play:hover {
+     background: url(/arena/playhov.svg);
+ }
+
+ .simple-white .play-pause-container .pause {
+     background: url(/arena/pause.svg);
+ }
+
+ .simple-white .play-pause-container .pause:hover {
+     background: url(/arena/pausehov.svg);
+ }
+
+ .simple-white .play-pause-container .volume {
+     width: 80px;
+     position: absolute;
+     right: -100px;
+     top: 10px;
+ }
+
+ .simple-white .play-pause-container .noUi-connect {
+     box-shadow: none;
+     background: #202020;
+ }
+
+ .simple-white .play-pause-container .play, .simple-white .play-pause-container .pause {
+     width: 133px;
+     height: 40px;
+     display: inline-block;
+     overflow: hidden;
+     text-indent: -9999px;
+     cursor: pointer;
+     float: left;
+ }
+
+ .simple-white .play-pause-container .noUi-horizontal {
+     height: 10px;
+     background: #B9B9B9;
+     box-shadow: none;
+   }
+
+   .simple-white .play-pause-container .noUi-horizontal .noUi-handle {
+     width: 12px;
+     height: 14px;
+     left: -3px;
+     top: -4px;
+     cursor: pointer;
+     border-radius: 50%;
+ }
+
+ .noUi-handle {
+     border: 1px solid #D9D9D9;
+     border-radius: 3px;
+     background: #FFF;
+     cursor: default;
+     box-shadow: none;
+   }
+
+ </style>
+
 </body>
-
 </html>
