@@ -23,7 +23,7 @@
     function nowplay()
     {
         $.ajax({
-            url: "/radiostat.php",  //Тут указываем файл со скриптами
+            url: "/api/radiostat.php",  //Тут указываем файл со скриптами
             cache: false,
             success: function(html){
                 $("#radiostat").html(html); //Контейнер для вывода информации
